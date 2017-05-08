@@ -1,0 +1,2 @@
+- Please run './gradlew build' to generate code
+- To run application use './gradlew bootRun'

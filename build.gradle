@@ -1,0 +1,58 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+version = '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile('net.bytebuddy:byte-buddy:1.6.14')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('com.querydsl:querydsl-core:4.1.4')
+	compile('com.querydsl:querydsl-apt:4.1.4:jpa')
+	compile('com.querydsl:querydsl-jpa:4.1.4')
+	compile('org.codehaus.groovy:groovy-all:2.4.7')
+	compile('com.zaxxer:HikariCP')
+	compile('com.github.ben-manes.caffeine:caffeine')
+	compile('com.netflix.hystrix:hystrix-core:1.5.9')
+	compile('com.google.guava:guava:21.0')
+	compile('joda-time:joda-time')
+	runtime('com.h2database:h2')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+compileJava {
+	options.compilerArgs << "-s"
+	options.compilerArgs << file(new File(projectDir, "/generated")).absolutePath
+	doFirst {
+		file(new File(projectDir, "/generated")).mkdirs()
+	}
+}
+
+clean.doLast {
+	file(new File(projectDir, "/generated")).deleteDir()
+}
+idea {
+	module {
+		sourceDirs += file('generated/')
+		generatedSourceDirs += file('generated/')
+	}
+}
